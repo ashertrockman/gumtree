@@ -67,7 +67,7 @@ configure(subprojects.findAll { it.name.startsWith('gen.antlr') }) {
 	}
 }
 
-def jacocoProjectsNames = ['core', 'gen.jdt', 'gen.c', 'gen.ruby', 'gen.js', 'gen.srcml', 'gen.css']
+def jacocoProjectsNames = ['core', 'gen.jdt', 'gen.c', 'gen.ruby', 'gen.js', 'gen.srcml', 'gen.css', 'gen.yaml']
 def jacocoProjects = subprojects.findAll { it.name in jacocoProjectsNames}
 configure(jacocoProjects) {
 	apply plugin: 'jacoco'

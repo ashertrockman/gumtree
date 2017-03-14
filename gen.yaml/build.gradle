@@ -1,0 +1,5 @@
+description = 'GumTree tree generator for YAML based on Yamlbeans'
+
+dependencies {
+	compile 'com.esotericsoftware.yamlbeans:yamlbeans:1.11'
+}
