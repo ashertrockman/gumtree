@@ -20,13 +20,18 @@
 package com.github.gumtreediff.gen.yaml;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.io.Reader;
 import java.io.StringReader;
 
 import org.junit.Test;
 
-import com.github.gumtreediff.gen.yaml.YamlTreeGenerator;
+import com.github.gumtreediff.actions.ActionGenerator;
+import com.github.gumtreediff.actions.model.Action;
+import com.github.gumtreediff.actions.model.Update;
+import com.github.gumtreediff.matchers.Matcher;
+import com.github.gumtreediff.matchers.Matchers;
 import com.github.gumtreediff.tree.ITree;
 import com.github.gumtreediff.tree.TreeContext;
 
@@ -41,5 +46,28 @@ public class TestYamlTreeGenerator {
         ITree tree = ctx.getRoot();
         // Root + Six Nodes
         assertEquals(7, tree.getSize());
+    }
+    
+    @Test
+    public void testDiff() throws Exception {
+        Reader src = new StringReader("somenode:\n" + "    - data\n" + "    - moredata\n" + "anothernode:\n"
+                + "    subnode:\n" + "        - contents");
+        
+        Reader dst = new StringReader("somenode:\n" + "    - data\n" + "    - changed\n" + "anothernode:\n"
+                + "    subnode:\n" + "        - contents");
+        ITree srcTree = new YamlTreeGenerator().generateFromReader(src).getRoot();
+        ITree dstTree = new YamlTreeGenerator().generateFromReader(dst).getRoot();
+        
+        Matcher m = Matchers.getInstance().getMatcher(srcTree, dstTree);
+        m.match();
+        
+        ActionGenerator g = new ActionGenerator(srcTree, dstTree, m.getMappings());
+        g.generate();
+        
+        Action a = g.getActions().get(0);
+        assertTrue(a instanceof Update);
+        Update u = (Update)a;
+        assertEquals("moredata", u.getNode().getLabel());
+        assertEquals("changed", u.getValue());
     }
 }
