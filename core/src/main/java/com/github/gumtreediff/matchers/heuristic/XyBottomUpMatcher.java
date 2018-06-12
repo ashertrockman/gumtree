@@ -36,12 +36,13 @@ import java.util.*;
  */
 public class XyBottomUpMatcher extends Matcher {
 
-    private static final double SIM_THRESHOLD = Double.parseDouble(System.getProperty("gumtree.match.xy.sim", "0.5"));
+    private static final double SIM_THRESHOLD = Double.parseDouble(System.getProperty("gt.xym.sim", "0.5"));
 
     public XyBottomUpMatcher(ITree src, ITree dst, MappingStore store) {
         super(src, dst, store);
     }
 
+    @Override
     public void match() {
         for (ITree src: this.src.postOrder())  {
             if (src.isRoot()) {
@@ -104,7 +105,8 @@ public class XyBottomUpMatcher extends Matcher {
         }
 
         for (int t: srcKinds.keySet())
-            if (dstKinds.get(t) != null && srcKinds.get(t).size() == dstKinds.get(t).size() && srcKinds.get(t).size() == 1)
+            if (dstKinds.get(t) != null && srcKinds.get(t).size() == dstKinds.get(t).size()
+                    && srcKinds.get(t).size() == 1)
                 addMapping(srcKinds.get(t).get(0), dstKinds.get(t).get(0));
     }
 }

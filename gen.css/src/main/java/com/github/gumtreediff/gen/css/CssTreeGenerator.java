@@ -42,6 +42,7 @@ import java.io.*;
 @Register(id = "css-phcss", accept = {"\\.css$"}, priority = Registry.Priority.MAXIMUM)
 public class CssTreeGenerator extends TreeGenerator {
 
+    @Override
     public TreeContext generate(Reader r) throws IOException {
         LineReader lr = new LineReader(r);
         CSSCharStream s = new CSSCharStream(new LineReader(lr));
@@ -51,7 +52,8 @@ public class CssTreeGenerator extends TreeGenerator {
         p.setCustomErrorHandler(null);
         p.setBrowserCompliantMode(false);
         try {
-            CascadingStyleSheet sheet = CSSHandler.readCascadingStyleSheetFromNode(ECSSVersion.LATEST, p.styleSheet());
+            CascadingStyleSheet sheet = CSSHandler.readCascadingStyleSheetFromNode(ECSSVersion.LATEST,
+                    p.styleSheet(), CSSReader.getDefaultInterpretErrorHandler());
             GtCssVisitor v = new GtCssVisitor(sheet, lr);
             CSSVisitor.visitCSS(sheet, v);
             return v.getTreeContext();

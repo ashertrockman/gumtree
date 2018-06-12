@@ -1,8 +1,6 @@
 plugins {
-    id 'me.champeau.gradle.jmh' version '0.2.0'
+    id "me.champeau.gradle.jmh" version "0.4.5"
 }
-
-apply plugin: 'me.champeau.gradle.jmh'
 
 uploadArchives.enabled = false
 jar.enabled = false
@@ -41,15 +39,15 @@ def getGitHash = { ->
 }
 
 jmh {
+    jmhVersion = '1.19'
     fork = 0
-    warmupIterations = 3
+    warmupIterations = 1
     iterations = 3
-    benchmarkMode = 'avgt'
+    benchmarkMode = ['AverageTime']
     benchmarkParameters = [
       'refPath' : new File("${project.projectDir}/src/jmh/resources/").listFiles()
         .collect { it.getAbsolutePath() }
         .findAll { it.matches(".*_v0_.*") }
-        .join(",")
     ]
     humanOutputFile = project.file("${project.buildDir}/reports/jmh/human_${new Date().getTime()}_${getGitHash()}.txt")
     resultsFile = project.file("${project.buildDir}/reports/jmh/results_${new Date().getTime()}_${getGitHash()}.csv")
@@ -63,12 +61,12 @@ task jmhPlot(type: Exec, dependsOn: 'jmh') {
 dependencies {
     compile project(':client')
     compile project(':client.diff')
-    compile project(':gen.antlr')
-    compile project(':gen.antlr-antlr')
-    compile project(':gen.antlr-json')
-    compile project(':gen.antlr-php')
-    compile project(':gen.antlr-r')
-    compile project(':gen.antlr-xml')
+    compile project(':gen.antlr3')
+    compile project(':gen.antlr3-antlr')
+    compile project(':gen.antlr3-json')
+    compile project(':gen.antlr3-php')
+    compile project(':gen.antlr3-r')
+    compile project(':gen.antlr3-xml')
     compile project(':gen.c')
     compile project(':gen.jdt')
     compile project(':gen.js')

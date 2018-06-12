@@ -26,6 +26,9 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -72,7 +75,7 @@ public class MappingsPanel extends JPanel implements TreeSelectionListener {
         this.src = src;
         this.dst = dst;
         this.classifyTrees = new RootsClassifier(src, dst, m);
-        this.mappings = new MappingStore(m.getMappingSet());
+        this.mappings = new MappingStore(m.getMappingsAsSet());
         this.panSrc = new TreePanel(this.src, new MappingsCellRenderer(true));
         this.panSrc.getJTree().addTreeSelectionListener(this);
         this.panDst = new TreePanel(this.dst, new MappingsCellRenderer(false));
@@ -94,8 +97,10 @@ public class MappingsPanel extends JPanel implements TreeSelectionListener {
         add(split);
 
         try {
-            txtSrc.getUI().getEditorKit(txtSrc).read(new FileReader(srcPath), txtSrc.getDocument(), 0);
-            txtDst.getUI().getEditorKit(txtDst).read(new FileReader(dstPath), txtDst.getDocument(), 0);
+            txtSrc.getUI().getEditorKit(txtSrc).read(Files.newBufferedReader(Paths.get(srcPath),
+                    Charset.forName("UTF-8")), txtSrc.getDocument(), 0);
+            txtDst.getUI().getEditorKit(txtDst).read(Files.newBufferedReader(Paths.get(dstPath),
+                    Charset.forName("UTF-8")), txtDst.getDocument(), 0);
         } catch (IOException | BadLocationException e) {
             e.printStackTrace();
         }

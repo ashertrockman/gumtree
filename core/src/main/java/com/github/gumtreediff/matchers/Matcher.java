@@ -21,12 +21,14 @@
 package com.github.gumtreediff.matchers;
 
 import com.github.gumtreediff.tree.ITree;
+import org.atteo.classindex.IndexSubclasses;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.logging.Logger;
 
+@IndexSubclasses
 public abstract class Matcher {
 
     public static final Logger LOGGER = Logger.getLogger("com.github.gumtreediff.matchers");
@@ -49,7 +51,7 @@ public abstract class Matcher {
         return mappings;
     }
 
-    public Set<Mapping> getMappingSet() {
+    public Set<Mapping> getMappingsAsSet() {
         return mappings.asSet();
     }
 
@@ -92,12 +94,12 @@ public abstract class Matcher {
     }
 
     protected int numberOfCommonDescendants(ITree src, ITree dst) {
-        Set<ITree> dstDescandants = new HashSet<>(dst.getDescendants());
+        Set<ITree> dstDescendants = new HashSet<>(dst.getDescendants());
         int common = 0;
 
         for (ITree t : src.getDescendants()) {
             ITree m = mappings.getDst(t);
-            if (m != null && dstDescandants.contains(m))
+            if (m != null && dstDescendants.contains(m))
                 common++;
         }
 
